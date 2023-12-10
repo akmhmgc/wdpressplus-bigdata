@@ -10,12 +10,14 @@ services:
 
   # Metabase
   metabase:
+    platform: linux/amd64
     image: metabase/metabase:latest
     ports:
       - 13000:3000
 
   # Hive Metastore
   metastore:
+    platform: linux/amd64
     image: wdpbigdata/hive-metastore:latest
     depends_on:
       - metastore-db
@@ -32,15 +34,17 @@ services:
     image: minio/minio:latest
     command: server /data
     environment:
-      - MINIO_ACCESS_KEY=accesskey
-      - MINIO_SECRET_KEY=secretkey
+      - MINIO_ROOT_USER=accesskey
+      - MINIO_ROOT_PASSWORD=secretkey
     volumes:
       - ./data:/data
     ports:
       - 9000:9000
+      - 9001:9001
 
   # Spark
   spark-submit:
+    platform: linux/amd64
     image: wdpbigdata/spark:latest
     entrypoint: spark-submit --packages org.apache.hadoop:hadoop-aws:3.2.0
     volumes:
@@ -48,6 +52,7 @@ services:
 
   # Presto
   presto-server:
+    platform: linux/amd64
     image: wdpbigdata/presto:latest
     depends_on:
       - metastore
